@@ -55,7 +55,12 @@ def get_view_direction(thetas, phis, overhead, front):
     return res
 
 
-def rand_poses(size, device, radius_range=[1, 1.5], theta_range=[0, 150], phi_range=[0, 360], return_dirs=False, angle_overhead=30, angle_front=60):
+def rand_poses(size, device, radius_range=[1, 1.5], 
+               theta_range=[0, 150], 
+               phi_range=[0, 360], 
+               return_dirs=False, 
+               angle_overhead=30, 
+               angle_front=60):
     ''' generate random poses from an orbit camera
     Args:
         size: batch size of generated poses.
@@ -170,7 +175,11 @@ class NeRFDataset:
 
         if self.training:
             # random pose on the fly
-            poses, dirs = rand_poses(B, self.device, radius_range=self.radius_range, return_dirs=self.opt.dir_text, angle_overhead=self.opt.angle_overhead, angle_front=self.opt.angle_front)
+            poses, dirs = rand_poses(B, self.device, 
+                                     radius_range=self.radius_range, 
+                                     return_dirs=self.opt.dir_text, 
+                                     angle_overhead=self.opt.angle_overhead, 
+                                     angle_front=self.opt.angle_front)
 
             # random focal
             fov = random.random() * (self.fovy_range[1] - self.fovy_range[0]) + self.fovy_range[0]

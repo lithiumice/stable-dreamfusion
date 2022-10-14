@@ -125,12 +125,19 @@ if __name__ == '__main__':
         optimizer = lambda model: torch.optim.Adam(model.get_params(opt.lr), betas=(0.9, 0.99), eps=1e-15)
         # optimizer = lambda model: Shampoo(model.get_params(opt.lr))
 
-        train_loader = NeRFDataset(opt, device=device, type='train', H=opt.h, W=opt.w, size=100).dataloader()
+        train_loader = NeRFDataset(opt, device=device, 
+                                   type='train', H=opt.h,
+                                   W=opt.w, size=100).dataloader()
 
         # decay to 0.01 * init_lr at last iter step
         scheduler = lambda optimizer: optim.lr_scheduler.LambdaLR(optimizer, lambda iter: 0.01 ** min(iter / opt.iters, 1))
 
-        trainer = Trainer('ngp', opt, model, guidance, device=device, workspace=opt.workspace, optimizer=optimizer, ema_decay=0.95, fp16=opt.fp16, lr_scheduler=scheduler, use_checkpoint=opt.ckpt, eval_interval=opt.eval_interval)
+        trainer = Trainer('ngp', 
+                          opt, model, guidance, 
+                          device=device, workspace=opt.workspace, 
+                          optimizer=optimizer, ema_decay=0.95, fp16=opt.fp16, 
+                          lr_scheduler=scheduler, use_checkpoint=opt.ckpt, 
+                          eval_interval=opt.eval_interval)
 
         if opt.gui:
             trainer.train_loader = train_loader # attach dataloader to trainer
@@ -139,7 +146,9 @@ if __name__ == '__main__':
             gui.render()
         
         else:
-            valid_loader = NeRFDataset(opt, device=device, type='val', H=opt.H, W=opt.W, size=5).dataloader()
+            valid_loader = NeRFDataset(opt, device=device, 
+                                       type='val', H=opt.H, 
+                                       W=opt.W, size=5).dataloader()
 
             max_epoch = np.ceil(opt.iters / len(train_loader)).astype(np.int32)
             trainer.train(train_loader, valid_loader, max_epoch)
